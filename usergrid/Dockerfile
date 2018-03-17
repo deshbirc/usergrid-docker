@@ -21,6 +21,7 @@ WORKDIR /root
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # build usergrid
+# RUN git checkout c6945e3d6f608d1333c269657eb47064866d3e0b 
 # this is done in one run step so less files are included in the layers of the
 # docker image, making it smaller.
 RUN echo "+++ install tomcat and packages required for compilation" 
@@ -29,9 +30,8 @@ RUN apt-get install -y maven curl tomcat7 git-core
 RUN echo "+++ fix tomcat7 init script: add missing java8 location" 
 RUN sed -i "s#/usr/lib/jvm/java-7-oracle#/usr/lib/jvm/java-7-oracle /usr/lib/jvm/java-8-oracle#g" /etc/init.d/tomcat7 
 RUN echo "+++ get usergrid source, set logging level" 
-RUN git clone --single-branch --branch master --depth 50 https://github.com/apache/usergrid.git usergrid 
+RUN git clone --single-branch --branch master --depth 50 https://github.com/deshbirc/usergrid.git usergrid
 RUN cd usergrid 
-RUN git checkout c6945e3d6f608d1333c269657eb47064866d3e0b 
 RUN grep -rl log4j.rootLogger=INFO stack | xargs sed -i 's#log4j.rootLogger=INFO#log4j.rootLogger=WARN#g' 
 RUN echo "+++ build usergrid"
 RUN cd /root/usergrid/sdks/java 
