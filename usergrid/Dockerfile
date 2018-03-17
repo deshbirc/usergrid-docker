@@ -32,11 +32,11 @@ RUN echo "+++ fix tomcat7 init script: add missing java8 location"
 RUN sed -i "s#/usr/lib/jvm/java-7-oracle#/usr/lib/jvm/java-7-oracle /usr/lib/jvm/java-8-oracle#g" /etc/init.d/tomcat7 
 RUN echo "+++ get usergrid source, set logging level" 
 RUN git clone --single-branch --branch master --depth 50 https://github.com/deshbirc/usergrid.git usergrid
+RUN git clone --single-branch --branch master --depth 50 https://github.com/apache/usergrid-java.git usergrid-java
 RUN cd usergrid 
 RUN echo "+++ build usergrid"
-RUN cd /root/usergrid/sdks/java 
+RUN cd /root/usergrid-java
 RUN mvn --quiet clean install -DskipTests -DskipIntegrationTests 
-RUN mvn --quiet install 
 RUN cd /root/usergrid/stack 
 RUN mvn --quiet clean install -DskipTests -DskipIntegrationTests 
 RUN echo "+++ cleanup"
