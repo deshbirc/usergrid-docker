@@ -31,20 +31,21 @@ RUN apt-get install -y maven curl tomcat7 git-core
 RUN echo "+++ fix tomcat7 init script: add missing java8 location" 
 RUN sed -i "s#/usr/lib/jvm/java-7-oracle#/usr/lib/jvm/java-7-oracle /usr/lib/jvm/java-8-oracle#g" /etc/init.d/tomcat7 
 RUN echo "+++ get usergrid source, set logging level" 
-RUN git clone --single-branch --branch master --depth 50 https://github.com/deshbirc/usergrid.git usergrid
-RUN git clone --single-branch --branch master --depth 50 https://github.com/apache/usergrid-java.git usergrid-java
-RUN echo "+++ build usergrid"
-RUN cd usergrid-java
-RUN mvn --quiet clean install -DskipTests
-RUN cd ../usergrid/stack 
-RUN mvn --quiet clean install -DskipTests
-RUN echo "+++ cleanup"
-RUN rm -rf /var/lib/tomcat7/webapps/ROOT
-RUN mv /root/usergrid/stack/rest/target/ROOT.war /var/lib/tomcat7/webapps
-RUN mv /root/usergrid/stack/config/src/main/resources/usergrid-default.properties /usr/share/tomcat7/lib/usergrid-deployment.properties
-RUN apt-get purge --auto-remove -y maven git-core ant
-RUN rm -rf /var/lib/apt/lists/*
-RUN rm -rf /root/usergrid
+RUN git clone --single-branch --branch master --depth 50 https://github.com/apache/usergrid-java.git usergrid-java && /
+    echo "+++ build usergrid" && /
+    cd /root/usergrid-java && /
+    mvn --quiet clean install -DskipTests && /
+    cd /root  && /
+    git clone --single-branch --branch master --depth 50 https://github.com/deshbirc/usergrid.git usergrid && /
+    cd /root/usergrid/stack && /
+    mvn --quiet clean install -DskipTests
+RUN echo "+++ cleanup" && /
+    rm -rf /var/lib/tomcat7/webapps/ROOT   
+RUN mv /root/usergrid/stack/rest/target/ROOT.war /var/lib/tomcat7/webapps && /
+    mv /root/usergrid/stack/config/src/main/resources/usergrid-default.properties /usr/share/tomcat7/lib/usergrid-deployment.properties
+RUN apt-get purge --auto-remove -y maven git-core ant && /
+    rm -rf /var/lib/apt/lists/* && /
+    rm -rf /root/usergrid
 
 # default command when starting container with "docker run"
 CMD /root/run.sh
