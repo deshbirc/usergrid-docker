@@ -33,12 +33,11 @@ RUN sed -i "s#/usr/lib/jvm/java-7-oracle#/usr/lib/jvm/java-7-oracle /usr/lib/jvm
 RUN echo "+++ get usergrid source, set logging level" 
 RUN git clone --single-branch --branch master --depth 50 https://github.com/deshbirc/usergrid.git usergrid
 RUN git clone --single-branch --branch master --depth 50 https://github.com/apache/usergrid-java.git usergrid-java
-RUN cd usergrid 
 RUN echo "+++ build usergrid"
-RUN cd /root/usergrid-java
-RUN mvn --quiet clean install -DskipTests -DskipIntegrationTests 
-RUN cd /root/usergrid/stack 
-RUN mvn --quiet clean install -DskipTests -DskipIntegrationTests 
+RUN cd usergrid-java
+RUN mvn --quiet clean install -DskipTests
+RUN cd ../usergrid/stack 
+RUN mvn --quiet clean install -DskipTests
 RUN echo "+++ cleanup"
 RUN rm -rf /var/lib/tomcat7/webapps/ROOT
 RUN mv /root/usergrid/stack/rest/target/ROOT.war /var/lib/tomcat7/webapps
